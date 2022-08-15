@@ -1,1 +1,4 @@
+login to master server (nagios)
 
+cd /usr/lib/nagios/plugins && ./check_nrpe -H <slave private ip>
+/usr/lib/nagios/plugins/check_nrpe -H <slave private ip> -c check_ping
