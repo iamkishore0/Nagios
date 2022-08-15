@@ -1,0 +1,49 @@
+sudo apt update
+sudo apt install -y autoconf bc gawk dc build-essential gcc libc6 make wget unzip apache2 php libapache2-mod-php libgd-dev libmcrypt-dev make libssl-dev snmp libnet-snmp-perl gettext
+cd ~/ && wget https://github.com/NagiosEnterprises/nagioscore/archive/nagios-4.4.6.tar.gz
+tar -xf nagios-4.4.6.tar.gz && cd nagioscore-*/
+sudo ./configure --with-httpd-conf=/etc/apache2/sites-enabled && sudo make all
+sudo make install-groups-users && sudo usermod -a -G nagios www-data
+sudo make install && sudo make install-daemoninit && sudo make install-commandmode
+sudo make install-config
+sudo make install-webconf && sudo a2enmod rewrite cgi
+systemctl restart apache2
+
+
+#set password
+sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
+
+#Install-plugins
+sudo apt install monitoring-plugins nagios-nrpe-plugin
+cd /usr/local/nagios/etc && mkdir -p /usr/local/nagios/etc/servers
+
+#Nagios-Configuration
+Next, edit the Nagios configuration 'nagios.cfg' using vi editor.
+    vi nagios.cfg >> Uncomment the 'cfg_dir' option that will be used for sotring all server hots configurations. (cfg_dir=/usr/local/nagios/etc/servers)
+    Save and close. 
+ 
+ Next edit the configuration file "resource.cfg" and define the path binary files of Nagios Monitoring Plugins. 
+    vi resource.cfg >> Define the Nagios Monitoring Plugins path by changing the default configuration as below. ($USER1$=/usr/lib/nagios/plugins)
+    Save and close. 
+    
+ After that, add the nagios admin email contacts by editing the configuration file "objects/contacts.cfg". 
+    vi objects/contacts.cfg >> Change the email address with your own. 
+           define contact{
+        ......
+        email             email@host.com
+ }
+  Save and close.
+  
+ Now define the nrpe check command by editing the configuration file "objects/commands.cfg". 
+     vi objects/commands.cfg >> Add the following configuration to the end of the line.
+      define command{
+        command_name check_nrpe
+        command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
+}
+Save and close, and the Nagioscore configuration has been completed. 
+
+#start the Nagios service and add it to the system boot & restart apache2
+ systemctl start nagios
+ systemctl enable nagios
+ systemctl status nagios
+ systemctl restart apache2
