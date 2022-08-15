@@ -1,0 +1,23 @@
+Login to client host and follow the steps
+
+sudo apt update
+sudo apt install nagios-nrpe-server monitoring-plugins
+cd /etc/nagios/ && vi nrpe.cfg
+   Uncomment the "server_address" line and change the value with the "client01" IP address. >> server_address=172.16.0.6
+   One the "allowed_hosts" line, add the Nagios Server IP address "172.16.0.5". >> allowed_hosts=127.0.0.1,::1,172.16.0.5
+   Save and close. 
+   
+Next, edit the "nrpe_local.cfg" configuration.
+   vi nrpe_local.cfg >> Change the IP address with the "client01" IP address, and paste the configuration into it. 
+   "command[check_root]=/usr/lib/nagios/plugins/check_disk -w 20% -c 10% -p /
+   command[check_ping]=/usr/lib/nagios/plugins/check_ping -H 172.16.0.6 -w 100.0,20% -c 500.0,60% -p 5
+   command[check_ssh]=/usr/lib/nagios/plugins/check_ssh -4 172.16.0.6
+   command[check_http]=/usr/lib/nagios/plugins/check_http -I 172.16.0.6
+   command[check_apt]=/usr/lib/nagios/plugins/check_apt"
+   Save and close. 
+ Now restart the NRPE service and add it to the system boot. 
+   systemctl restart nagios-nrpe-server
+   systemctl enable nagios-nrpe-server
+
+CHeck status of NRPE Server - It should be active and running
+  systemctl status nagios-nrpe-server
