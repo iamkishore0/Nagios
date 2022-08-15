@@ -19,15 +19,15 @@ cd /usr/local/nagios/etc && mkdir -p /usr/local/nagios/etc/servers
 
 #Nagios-Configuration
 Next, edit the Nagios configuration 'nagios.cfg' using vi editor.
-    vi nagios.cfg >> Uncomment the 'cfg_dir' option that will be used for sotring all server hots configurations. (cfg_dir=/usr/local/nagios/etc/servers)
+    vi /usr/local/nagios/etc/nagios.cfg >> Uncomment the 'cfg_dir' option that will be used for sotring all server hots configurations. (cfg_dir=/usr/local/nagios/etc/servers)
     Save and close. 
  
  Next edit the configuration file "resource.cfg" and define the path binary files of Nagios Monitoring Plugins. 
-    vi resource.cfg >> Define the Nagios Monitoring Plugins path by changing the default configuration as below. ($USER1$=/usr/lib/nagios/plugins)
+    vi /usr/local/nagios/etc/resource.cfg >> Define the Nagios Monitoring Plugins path by changing the default configuration as below. ($USER1$=/usr/lib/nagios/plugins)
     Save and close. 
     
  After that, add the nagios admin email contacts by editing the configuration file "objects/contacts.cfg". 
-    vi objects/contacts.cfg >> Change the email address with your own. 
+    vi /usr/local/nagios/etc/objects/contacts.cfg >> Change the email address with your own. 
            define contact{
         ......
         email             email@host.com
@@ -35,7 +35,7 @@ Next, edit the Nagios configuration 'nagios.cfg' using vi editor.
   Save and close.
   
  Now define the nrpe check command by editing the configuration file "objects/commands.cfg". 
-     vi objects/commands.cfg >> Add the following configuration to the end of the line.
+     vi /usr/local/nagios/etc/objects/commands.cfg >> Add the following configuration to the end of the line.
       define command{
         command_name check_nrpe
         command_line $USER1$/check_nrpe -H $HOSTADDRESS$ -c $ARG1$
