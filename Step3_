@@ -112,3 +112,11 @@ define service {
       notifications_enabled           1
       register                        1
 }'
+
+
+restart nagios
+'sudo systemctl restart nagios'
+
+check status of nagios
+'sudo systemctl status nagios'
+
