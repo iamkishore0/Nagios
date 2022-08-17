@@ -49,3 +49,5 @@ Save and close, and the Nagioscore configuration has been completed.
  'systemctl restart apache2'
  
  Access nagios at <public ip>/nagios   eg: 89.65.23.36/nagios
+ Nagios username: nagiosadmin
+ password: <set password>
